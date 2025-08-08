@@ -1,0 +1,27 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% load i18n %}
+
+<head>
+  <title>{% block title %}Bluestock Admin{% endblock %}</title>
+ <link rel="icon" type="image/x-icon" href="{% static 'image/favicon.ico' %}">
+
+  {% block extrahead %}{% endblock %}
+</head>
+
+{% block branding %}
+  <h1 id="site-name" class="d-flex align-items-center gap-2">
+  <a href="{% url 'admin:index' %}" class="d-flex align-items-center gap-2">
+    <img src="https://bluestock.in/static/assets/logo/logo.webp" alt="Bluestock Logo" height="32"></a>
+</h1>
+
+{% endblock %}
+
+{% block nav-global %}
+  <div class="nav-item d-flex gap-2 align-items-center">
+  <a class="btn btn-sm btn-success" href="{% url 'ipo_app:dashboard-home' %}">
+    🏠︎ Home
+  </a>
+</div>
+
+{% endblock %}

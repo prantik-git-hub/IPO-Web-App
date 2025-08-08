@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>{{ ipo.company.company_name }} IPO Details</h2>
+  <hr>
+
+  <!-- Company Logo -->
+  <div class="mb-4">
+    <label class="form-label"><strong>Company Logo</strong></label>
+    {% if ipo.company_logo %}
+      <div class="mb-2">
+        <img src="{{ ipo.company_logo.url }}" alt="Company Logo" height="80" class="img-thumbnail">
+      </div>
+    {% else %}
+      <p class="text-muted">No logo uploaded.</p>
+    {% endif %}
+  </div>
+
+  <!-- IPO Basic Info -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <strong>Status:</strong> {{ ipo.get_status_display }}
+    </div>
+    <div class="col-md-4">
+      <strong>Price Band:</strong>
+      {% if ipo.price_band %} ₹{{ ipo.price_band }} {% else %} Not Available {% endif %}
+    </div>
+    <div class="col-md-4">
+      <strong>Issue Size:</strong>
+      {% if ipo.issue_size %} {{ ipo.issue_size }} {% else %} Not Available {% endif %}
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <strong>Issue Type:</strong>
+      {% if ipo.issue_type %} {{ ipo.issue_type }} {% else %} Not Available {% endif %}
+    </div>
+    <div class="col-md-4">
+      <strong>Open Date:</strong>
+      {% if ipo.open_date %} {{ ipo.open_date }} {% else %} Not Available {% endif %}
+    </div>
+    <div class="col-md-4">
+      <strong>Close Date:</strong>
+      {% if ipo.close_date %} {{ ipo.close_date }} {% else %} Not Available {% endif %}
+    </div>
+  </div>
+
+  <!-- Listed IPO Details -->
+  <div class="mt-4 mb-2">
+    <h6><strong>NEW LISTED IPO DETAILS (WHEN IPO GETS LISTED)</strong></h6>
+    <hr>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <strong>IPO Price:</strong>
+      {% if ipo.ipo_price %} ₹{{ ipo.ipo_price }} {% else %} Not Available {% endif %}
+    </div>
+    <div class="col-md-4">
+      <strong>Listing Price:</strong>
+      {% if ipo.listing_price %} ₹{{ ipo.listing_price }} {% else %} Not Available {% endif %}
+    </div>
+    <div class="col-md-4">
+      <strong>Listing Date:</strong>
+      {% if ipo.listing_date %} {{ ipo.listing_date }} {% else %} Not Available {% endif %}
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <strong>Current Market Price:</strong>
+      {% if ipo.current_market_price %} ₹{{ ipo.current_market_price }} {% else %} Not Available {% endif %}
+    </div>
+    <div class="col-md-4">
+      <strong>Listing Gain:</strong>
+      {% if ipo.listing_gain is not None %}
+        {{ ipo.listing_gain }}%
+      {% else %}
+        N/A
+      {% endif %}
+    </div>
+    <div class="col-md-4">
+      <strong>Current Return:</strong>
+      {% if ipo.current_return is not None %}
+        {{ ipo.current_return }}%
+      {% else %}
+        N/A
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- RHP / DRHP Section -->
+  <div class="row mb-3">
+    {% for doc in ipo.documents.all %}
+      <div class="col-md-6">
+        <strong>{{ doc.doc_type }}:</strong>
+        <a href="{{ doc.file.url }}" target="_blank" class="d-block">📄 View {{ doc.doc_type }} PDF</a>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <p class="text-muted">No documents uploaded.</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Actions -->
+  <div class="mt-4">
+    <a href="{% url 'ipo_app:ipo-edit' ipo.id %}" class="btn btn-warning">Edit IPO</a>
+    <a href="{% url 'ipo_app:ipo-list' %}" class="btn btn-secondary">Back to List</a>
+  </div>
+</div>
+{% endblock %}

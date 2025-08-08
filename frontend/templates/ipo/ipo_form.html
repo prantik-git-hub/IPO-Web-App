@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4">
+  <div class="row">
+    <div class="col header-block">
+      <h5><b>IPO Information</b></h5>
+      <p>Enter IPO Details</p>
+    </div>
+  </div>
+  <hr>
+
+  <div class="card shadow-sm p-4">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% if form.errors or doc_form.errors %}
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for field in doc_form %}
+              {% for error in field.errors %}
+                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- COMPANY LOGO -->
+      <div class="mb-4">
+        <label class="form-label"><strong>COMPANY LOGO</strong></label>
+        <div class="mb-2">
+          {% if ipo.company_logo %}
+            <img id="logoPreview" src="{{ ipo.company_logo.url }}" alt="Company Logo" height="60" class="img-thumbnail">
+          {% else %}
+            <img id="logoPreview" src="" alt="No Logo" height="60" class="img-thumbnail d-none">
+          {% endif %}
+        </div>
+
+        <input type="file" name="company_logo" id="id_company_logo" class="d-none">
+        <input type="hidden" name="delete_logo" id="delete_logo_flag" value="false">
+
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="document.getElementById('id_company_logo').click()">Upload Logo</button>
+          <button type="button" id="deleteLogoBtn" class="btn btn-sm btn-danger">Delete Logo</button>
+        </div>
+      </div>
+
+      <!-- IPO FIELDS -->
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">COMPANY</label>
+          {{ form.company }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">PRICE BAND</label>
+          {{ form.price_band }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">OPEN</label>
+          {{ form.open_date }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">CLOSE</label>
+          {{ form.close_date }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">ISSUE SIZE</label>
+          {{ form.issue_size }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">ISSUE TYPE</label>
+          {{ form.issue_type }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">STATUS</label>
+          {{ form.status }}
+        </div>
+      </div>
+
+      <!-- LISTED IPO SECTION -->
+      <div class="mt-4 mb-2">
+        <h6><strong>NEW LISTED IPO DETAILS (WHEN IPO GETS LISTED)</strong></h6>
+        <hr>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          {{ form.ipo_price.label_tag }}
+          {{ form.ipo_price }}
+        </div>
+        <div class="col-md-6">
+          {{ form.listing_price.label_tag }}
+          {{ form.listing_price }}
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          {{ form.listing_date.label_tag }}
+          {{ form.listing_date }}
+        </div>
+        <div class="col-md-6">
+          <label for="listing_gain">Listing Gain (%)</label>
+          <input class="form-control" type="text" value="{{ ipo.listing_gain|default:'None' }}" readonly>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          {{ form.current_market_price.label_tag }}
+          {{ form.current_market_price }}
+        </div>
+        <div class="col-md-6">
+          <label for="current_return">Current Return (%)</label>
+          <input class="form-control" type="text" value="{{ ipo.current_return|default:'None' }}" readonly>
+        </div>
+      </div>
+
+      <!-- RHP / DRHP UPLOADS -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="rhp_pdf">RHP PDF</label>
+          <input type="file" name="rhp_pdf" class="form-control">
+          {% if rhp_doc %}
+            <small><a href="{{ rhp_doc.file.url }}" target="_blank">📄 View existing RHP PDF</a></small>
+          {% endif %}
+        </div>
+        <div class="col-md-6">
+          <label for="drhp_pdf">DRHP PDF</label>
+          <input type="file" name="drhp_pdf" class="form-control">
+          {% if drhp_doc %}
+            <small><a href="{{ drhp_doc.file.url }}" target="_blank">📄 View existing DRHP PDF</a></small>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="mt-4 text-end">
+        <button type="submit" class="btn btn-primary">Register</button>
+        <a href="{% url 'ipo_app:ipo-list' %}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const input = document.getElementById("id_company_logo");
+  const preview = document.getElementById("logoPreview");
+  const deleteBtn = document.getElementById("deleteLogoBtn");
+  const deleteFlag = document.getElementById("delete_logo_flag");
+
+  input.addEventListener("change", function () {
+    const file = input.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.classList.remove("d-none");
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  deleteBtn.addEventListener("click", function () {
+    input.value = "";
+    preview.src = "";
+    preview.classList.add("d-none");
+    deleteFlag.value = "true";
+    deleteBtn.innerText = "Marked for deletion";
+  });
+});
+</script>
+{% endblock %}

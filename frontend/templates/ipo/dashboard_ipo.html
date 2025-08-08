@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4">
+  <div class="row mb-4">
+    <div class="col">
+      <h5><strong>IPO Dashboard</strong></h5>
+      <p class="text-muted">Analytics overview of IPO listings</p>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h6 class="card-title mb-2">Total IPOs</h6>
+          <h3 class="text-primary">{{ total_ipos }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h6 class="card-title mb-2">Total Companies</h6>
+          <h3 class="text-success">{{ total_companies }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h6 class="card-title mb-2">IPO Status</h6>
+          {% if ipo_status_counts %}
+            <ul class="list-unstyled mb-0">
+              {% for status, count in ipo_status_counts.items %}
+                <li><strong>{{ status|title }}:</strong> {{ count }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted mb-0">No IPOs found</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <h6 class="card-title">IPO Price Analysis</h6>
+      <canvas id="ipoChart" height="120"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ipoNames = {{ ipo_names|safe }};
+  const priceBand = {{ price_band|safe }};
+  const marketPrices = {{ market_prices|safe }};
+  const listingGains = {{ listing_gains|safe }};
+  const currentReturns = {{ current_returns|safe }};
+
+  const ctx = document.getElementById('ipoChart').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ipoNames,
+      datasets: [
+        {
+          label: 'Price Band',
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          data: priceBand
+        },
+        {
+          label: 'Market Price',
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          data: marketPrices
+        },
+        {
+          label: 'Listing Gain (%)',
+          backgroundColor: 'rgba(255, 205, 86, 0.6)',
+          borderColor: 'rgba(255, 205, 86, 1)',
+          data: listingGains
+        },
+        {
+          label: 'Current Return (%)',
+          backgroundColor: 'rgba(255, 99, 132, 0.6)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          data: currentReturns
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      scales: {
+        x: {
+          ticks: {
+            autoSkip: false,
+            maxRotation: 45,
+            minRotation: 0
+          }
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Value'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top'
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: ${context.parsed.y}`;
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}
