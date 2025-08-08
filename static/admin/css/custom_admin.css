@@ -1,0 +1,14 @@
+/* static/admin/css/custom_admin.css */
+body {
+  background-color: #f0f2f5;
+}
+
+#header {
+  background-color: #3b4cca;
+  color: white;
+}
+
+#branding h1 {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
