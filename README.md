@@ -90,7 +90,7 @@ like going back to Admin panel, toggling the theme to
 dark/white or can logout from just the IPO dashboard. 
 6) Logout from the IPO dashboard (not from the whole 
 system: 
-API TESTING IN POSTMAN : 1) Open POSTMAN and select new 
+API TESTING IN POSTMAN : 1) Open POSTMAN and select new
 collection for http. 
 
 2) Paste the URL for IPO to perform GET and POST :
