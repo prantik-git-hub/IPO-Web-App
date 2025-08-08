@@ -33,18 +33,17 @@ run again
 ```
 docker compose up
 ```
- or
+or
 ```
  docker compose up -d
 ```
- or 
-```
-run
+or run
 ```
 docker compose restart 
 ```  
 
 3.) If any changes made in the models then run first in a new terminal
+
 ```
 docker-compose exec web python manage.py makemigrations
 ```
@@ -56,6 +55,7 @@ docker-compose exec web python manage.py migrate
 (it will migrate all the files) 
 
 4.) If any changes in the staticfiles then run in the same terminal
+
 ```
 docker-compose exec web python manage.py collectstatic –noinput
 ```
@@ -64,6 +64,7 @@ run the system and the containers again.
 
 6.) For creating a new superuser run in a new terminal or in 
 the same terminal ensuring the docker is running :
+
 ```
 docker-compose exec web python manage.py createsuperuser
 ```
