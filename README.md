@@ -11,8 +11,8 @@ STARTING THE WEB APPLICATION :
 ```
    docker compose build
 ```
-   (to explicitly build or rebuild the Docker images defined 
-within the docker-compose.yml file) 
+   (to explicitly build or rebuild the Docker images defined within the docker-compose.yml file) 
+
 2.) Run again in the same terminal- 
 ```
 docker compose up
@@ -23,6 +23,7 @@ docker compose up -d
 ```
 (check the docker for web and 
 database to start running as web-1 and db-1) 
+
 3) For any technical problem run in the terminal- 
 ```
 docker compose down
@@ -42,8 +43,8 @@ run
 ```
 docker compose restart 
 ```  
-3.) If any changes made in the models then run first in a new 
-terminal
+
+3.) If any changes made in the models then run first in a new terminal
 ```
 docker-compose exec web python manage.py makemigrations
 ```
@@ -53,13 +54,14 @@ Then run
 docker-compose exec web python manage.py migrate
 ```
 (it will migrate all the files) 
-4.) If any changes in the staticfiles then run in the same 
-terminal
+
+4.) If any changes in the staticfiles then run in the same terminal
 ```
 docker-compose exec web python manage.py collectstatic –noinput
 ```
 5.) After all the changes are made then repeat the steps 1,2 to 
 run the system and the containers again. 
+
 6.) For creating a new superuser run in a new terminal or in 
 the same terminal ensuring the docker is running :
 ```
@@ -67,6 +69,7 @@ docker-compose exec web python manage.py createsuperuser
 ```
 [it will prompt for : email, username, 
 password and confirm password] 
+
 RUNNING THE WEB APPLICATION :
 1) Open in any browser :
 ```
@@ -88,6 +91,7 @@ dark/white or can logout from just the IPO dashboard.
 system: 
 API TESTING IN POSTMAN : 1) Open POSTMAN and select new 
 collection for http. 
+
 2) Paste the URL for IPO to perform GET and POST :
 ```
 http://localhost:8000/ipo/api/receive/ 
